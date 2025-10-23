@@ -2,18 +2,19 @@ require('dotenv').config()
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const authRoute = require("./router/auth-router");
-const contactRoute = require("./router/contact-router");
+const authRoute = require("./routes/auth-route");
+// const contactRoute = require("./router/contact-router");
 const connectDb = require("./utils/db");
-const errorMiddleware = require('./middlewares/error-middlewar');
+// const errorMiddleware = require('./middlewares/error-middlewar');
 
 // lst's import admin router
-const adminRoute = require("./router/Admin-router");
+// const adminRoute = require("./router/Admin-router");
 
 app.use(express.json());
 app.use(cors());
 const corsOptions = {
-    origin: process.env.CLIENT_URL,
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
     credentials: true,
     optionsSuccessStatus: 200 
@@ -24,13 +25,13 @@ app.use(cors(corsOptions));
 
 //lset's use routes
 app.use("/api/auth", authRoute);
-app.use("/api/form", contactRoute);
+// app.use("/api/form", contactRoute);
 
 
 // lst's import admin router
-app.use("/api/admin", adminRoute);
+// app.use("/api/admin", adminRoute);
 
-app.use(errorMiddleware);
+// app.use(errorMiddleware);
 
 // const PORT = 5000;
 connectDb().then(() => {

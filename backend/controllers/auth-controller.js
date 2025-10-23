@@ -1,5 +1,5 @@
 const User = require("../models/user-model");
-const { errorHandler } = require("../utils/error");
+const { errorHandlerDb } = require("../utils/error");
 // const bcrypt = require("bcryptjs");
 
 
@@ -19,7 +19,7 @@ const home = async (req, res) => {
 };
 
 
-const register = async (req, res, next) => {
+const register = async (req, res) => {
     try {
         const {
             name,
@@ -31,8 +31,10 @@ const register = async (req, res, next) => {
         } = req.body;
 
         
-        if(!name || !email || !phone || !password || name === "" || email === "" || password == ""){
-            return next(errorHandler(400, "All fields are required "));
+        if(!name || !email || !phone || !password || name === "" || email === "" || password == ""){            
+             return res.status(400).json({
+                message: "All fields are required "
+            });
         };
 
         const userExist = await User.findOne({
@@ -40,7 +42,19 @@ const register = async (req, res, next) => {
         });
 
         if (userExist) {
-            return next(errorHandler(400, "Email alredy Exists !..."));
+             return res.status(400).json({
+                message: "Email alredy Exists !..."
+            })
+        }
+
+        const userExistPhone = await User.findOne({
+            phone
+        });
+
+        if (userExistPhone) {
+             return res.status(400).json({
+                message: "Phone alredy Exists !..."
+            })
         }
 
         // hash password
@@ -62,7 +76,7 @@ const register = async (req, res, next) => {
             userId: userCreated._id.toString(),
         });
     } catch (error) {
-        next(error);
+        res.status(500).json({message: "Internal Server Error !.."});
     }
 };
 
@@ -75,17 +89,24 @@ const login = async (req, res, next) => {
             password
         } = req.body;
 
+        if(!email || !password || email === "" || password == ""){            
+             return res.status(400).json({
+                message: "All fields are required "
+            });
+        };
+
         const userExist = await User.findOne({
             email
         });
 
         if (!userExist) {
-            return next(errorHandler(400, "Invalid Credentials..."));
-        }
+            return res.status(400).json({
+                message: "Invalid Credentials..."
+            });
+        };
 
         // const user = await bcrypt.compare(password, userExist.password);
         const user = await userExist.comparePassword(password);
-
         if (user) {
             res.status(200).json({
                 message: "Login Successfully Done..",
@@ -94,14 +115,14 @@ const login = async (req, res, next) => {
                 role: userExist.role,
             });
         } else {
-            next(errorHandler(401, "Invalid Email or Password.."));
+            res.status(401).json({message: "Email or Password Invalid Credentials..."});
         }
 
     } catch (error) {
         // res.status(500).json("Internal Server Error !..");
         next(error);
     }
-}
+};
 
 
 

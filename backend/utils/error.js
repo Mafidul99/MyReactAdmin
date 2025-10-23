@@ -1,4 +1,4 @@
-const errorHandler = (statusCode, message) => {
+const errorHandlerDb = (statusCode, message) => {
   const error = new Error()
 
   error.statusCode = statusCode
@@ -8,4 +8,6 @@ const errorHandler = (statusCode, message) => {
 }
 
 
-module.exports = errorHandler;
+module.exports = errorHandlerDb;
+
+

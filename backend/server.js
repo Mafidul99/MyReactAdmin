@@ -3,9 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const authRoute = require("./routes/auth-route");
-// const contactRoute = require("./router/contact-router");
 const connectDb = require("./utils/db");
 const errorMiddleware = require('./middlewares/error-middlewar');
+// const contactRoute = require("./router/contact-router");
 
 // lst's import admin router
 // const adminRoute = require("./router/Admin-router");

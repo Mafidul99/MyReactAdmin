@@ -5,7 +5,7 @@ const app = express();
 const authRoute = require("./routes/auth-route");
 // const contactRoute = require("./router/contact-router");
 const connectDb = require("./utils/db");
-// const errorMiddleware = require('./middlewares/error-middlewar');
+const errorMiddleware = require('./middlewares/error-middlewar');
 
 // lst's import admin router
 // const adminRoute = require("./router/Admin-router");
@@ -31,7 +31,7 @@ app.use("/api/auth", authRoute);
 // lst's import admin router
 // app.use("/api/admin", adminRoute);
 
-// app.use(errorMiddleware);
+app.use(errorMiddleware);
 
 // const PORT = 5000;
 connectDb().then(() => {

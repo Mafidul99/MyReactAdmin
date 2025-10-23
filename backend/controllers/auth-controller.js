@@ -1,4 +1,5 @@
 const User = require("../models/user-model");
+const { errorHandler } = require("../utils/error");
 // const bcrypt = require("bcryptjs");
 
 
@@ -18,7 +19,7 @@ const home = async (req, res) => {
 };
 
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
     try {
         const {
             name,
@@ -29,14 +30,17 @@ const register = async (req, res) => {
             role
         } = req.body;
 
+        
+        if(!name || !email || !phone || !password || name === "" || email === "" || password == ""){
+            return next(errorHandler(400, "All fields are required "));
+        };
+
         const userExist = await User.findOne({
             email
         });
 
         if (userExist) {
-            return res.status(400).json({
-                message: "Email alredy Exists !..."
-            })
+            return next(errorHandler(400, "Email alredy Exists !..."));
         }
 
         // hash password
@@ -58,13 +62,13 @@ const register = async (req, res) => {
             userId: userCreated._id.toString(),
         });
     } catch (error) {
-        res.status(500).json("Internal Server Error !..");
+        next(error);
     }
 };
 
 
 // user LoginMenu
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
         const {
             email,
@@ -76,9 +80,7 @@ const login = async (req, res) => {
         });
 
         if (!userExist) {
-            return res.status(400).json({
-                message: "Invalid Credentials..."
-            });
+            return next(errorHandler(400, "Invalid Credentials..."));
         }
 
         // const user = await bcrypt.compare(password, userExist.password);
@@ -92,9 +94,7 @@ const login = async (req, res) => {
                 role: userExist.role,
             });
         } else {
-            res.status(401).json({
-                msg: "Invalid Email or Password.."
-            })
+            next(errorHandler(401, "Invalid Email or Password.."));
         }
 
     } catch (error) {

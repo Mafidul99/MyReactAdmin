@@ -3,11 +3,12 @@ import { Outlet } from "react-router-dom"
 import Header from "../pages/Admin/Common/Header";
 import Sidebar from "../pages/Admin/Common/Sidebar";
 
-const PrivateRoute = ({allowedRoles}) => {
-     const [sidebarOpen, setSidebarOpen] = useState(false);
-  return(
+const PrivateRoute = ({ allowedRoles }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  return (
+
     <>
-    <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         {/* Content area */}
@@ -22,7 +23,7 @@ const PrivateRoute = ({allowedRoles}) => {
         </div>
       </div>
     </>
-  );
+  )
 }
 
 export default PrivateRoute;
